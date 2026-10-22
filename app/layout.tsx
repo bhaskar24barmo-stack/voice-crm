@@ -5,11 +5,7 @@ import "./globals.css";
 const serif = Fraunces({ subsets: ["latin"], variable: "--font-serif" });
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-import { SITE_URL } from "@/lib/site";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
   title: "Voice CRM — Speak it. CRM gets it done.",
   description: "Update your CRM, capture leads, create follow-ups, and manage customer information using your voice. Join the waitlist.",
   openGraph: { title: "Voice CRM — Speak it. CRM gets it done.", description: "A CRM you can simply talk to. Join the waitlist.", type: "website" },
