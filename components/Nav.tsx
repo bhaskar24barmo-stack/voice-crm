@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo, primary } from "./ui";
 
-const links = [["Product", "#product"], ["How It Works", "#how"], ["Pricing", "#pricing"]];
-const Soon = () => <span className="ml-1.5 rounded bg-ink/5 px-1.5 py-0.5 text-xs">Soon</span>;
+const links = [["Product", "/#product"], ["How It Works", "/#how"], ["Pricing", "/#pricing"]];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -21,11 +20,11 @@ export default function Nav() {
         <Logo />
         <ul className="hidden items-center gap-8 text-sm md:flex">
           {links.map(([l, h]) => <li key={h}><a href={h} className="hover:text-accent">{l}</a></li>)}
-          <li className="text-ink/60" title="The blog is coming soon">Blog<Soon /></li>
+          <li><a href="/blog" className="hover:text-accent">Blog</a></li>
         </ul>
         <div className="hidden items-center gap-4 md:flex">
-          <span className="text-sm text-ink/60" title="Login opens once the product launches">Login<Soon /></span>
-          <a href="#waitlist" className={`${primary} !py-2 text-sm`}>Join Waitlist</a>
+          <a href="/login" className="text-sm hover:text-accent">Log in</a>
+          <a href="/#waitlist" className={`${primary} !py-2 text-sm`}>Join Waitlist</a>
         </div>
         <button className="p-2 md:hidden" aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
@@ -35,9 +34,9 @@ export default function Nav() {
         <div id="mobile-menu" className="border-t border-line px-5 pb-5 md:hidden">
           <ul className="flex flex-col py-3">
             {links.map(([l, h]) => <li key={h}><a href={h} onClick={() => setOpen(false)} className="block py-2.5 text-lg">{l}</a></li>)}
-            <li className="py-2.5 text-lg text-ink/60">Blog<Soon /></li>
+            <li><a href="/blog" onClick={() => setOpen(false)} className="block py-2.5 text-lg">Blog</a></li><li><a href="/login" onClick={() => setOpen(false)} className="block py-2.5 text-lg">Log in</a></li>
           </ul>
-          <a href="#waitlist" onClick={() => setOpen(false)} className={`${primary} w-full`}>Join Waitlist</a>
+          <a href="/#waitlist" onClick={() => setOpen(false)} className={`${primary} w-full`}>Join Waitlist</a>
         </div>
       )}
     </header>

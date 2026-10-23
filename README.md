@@ -1,96 +1,67 @@
-# Voice CRM V2
+# Voice CRM landing
 
-Voice CRM V2 is a CRM application designed to help users manage customer relationships and support AI-powered assistance.
+Next.js 14 + Tailwind. Landing page, working waitlist, login/signup, and a blog.
 
-## Features
+> Full launch steps and environment variables: see **LAUNCH-GUIDE.md**.
 
-- User authentication with Supabase
-- User-specific data protected by Row Level Security (RLS)
-- AI assistant API integration
-- Next.js application interface
-- Supabase database integration
-
-## Tech Stack
-
-- Next.js
-- TypeScript
-- Supabase
-- React
-- Tailwind CSS
-- OpenRouter (for AI model integration, when configured)
-
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/bhaskar24barmo-stack/voice-crm.git
-cd voice-crm
-```
-
-### 2. Install dependencies
-
+## Run locally
 ```bash
 npm install
-```
-
-### 3. Configure environment variables
-
-Create a `.env.local` file in the project root and copy the required variables from `.env.example`.
-
-Fill in the appropriate values for your Supabase project and AI provider.
-
-Never commit real API keys, passwords, or secrets to GitHub.
-
-### 4. Set up Supabase
-
-1. Open your Supabase project.
-2. Go to the SQL Editor.
-3. Run the SQL migration from `supabase/migrations/001_voice_crm.sql`.
-4. Confirm that the required tables and Row Level Security policies are configured.
-
-### 5. Run the application
-
-```bash
+cp .env.example .env.local   # fill in values (see below)
 npm run dev
 ```
 
-Open http://localhost:3000 in your browser.
-
-### 6. Check the build
-
+## Put it on GitHub (so everyone can work on it)
 ```bash
-npm run typecheck
-npm run build
+git init && git add . && git commit -m "Voice CRM landing"
+# create an empty repo on github.com, then:
+git remote add origin https://github.com/<you>/voice-crm-landing.git
+git branch -M main && git push -u origin main
 ```
+`.env*` files are git-ignored. Never commit keys.
 
-Run these commands only if the corresponding scripts are defined in `package.json`.
+## Make waitlist + login/signup work (Supabase, free tier)
+1. Create a project at supabase.com. Run `supabase/schema.sql` in the SQL editor.
+2. Copy the values from Project Settings -> API into `.env.local` (and into Vercel -> Settings -> Environment Variables).
+3. Authentication -> Providers -> Email: keep "Confirm email" on, and set the Site URL to your domain.
+4. Redeploy. Waitlist signups appear in the `waitlist` table; accounts appear under Authentication -> Users.
 
-## Deployment
+No Supabase? Set `WAITLIST_WEBHOOK_URL` (e.g. a Google Apps Script that appends to a Sheet) for the waitlist only.
 
-Configure the required environment variables in your hosting provider, such as Vercel, and deploy the application.
+## Blog and SEO
+- Posts are Markdown files in `content/blog/` (copy an existing one; keep the `---` header).
+- `/sitemap.xml` and `/robots.txt` are generated automatically; each post has canonical URL and JSON-LD.
+- Search Console: add your site, choose the "HTML tag" method, paste the `content` value into `NEXT_PUBLIC_GSC_VERIFICATION`, redeploy, click Verify, then submit `https://your-domain/sitemap.xml`.
+- `content/TOPICS.md` is a backlog of post ideas.
 
-After changing environment variables, redeploy if required.
 
-## Current Limitations
+## CRM workspace (v2.0)
 
-The following features may require additional development:
+After login, `/account` is the CRM. Landing page, login and signup are unchanged.
 
-- Teams and organizations
-- Billing
-- Calendar and email synchronization
-- Delete and edit screens
-- Automated tests
-- Redis-based rate limiting
-- Progressive Web App (PWA) and offline support
+### 1. Database (required)
+In Supabase, open **SQL Editor**, paste `supabase/crm-schema.sql` and run it. It only adds tables (contacts, leads, tasks, activities, calls, ai_usage) and never touches `waitlist`. Every table has Row Level Security so each user sees only their own rows.
+Then run `supabase/rls-test.sql` (see the instructions at the top of that file) to confirm one user cannot read or change another user's data.
 
-## Security
+### 2. Environment variables (Vercel: Project → Settings → Environment Variables)
+| Variable | Needed for |
+|---|---|
+| `SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Login and all CRM data (already set if login works) |
+| `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` | AI assistant and call summaries |
+| `STT_API_URL`, `STT_API_KEY`, `STT_MODEL` | Transcribing recorded or uploaded audio (optional) |
+| `NEXT_PUBLIC_CURRENCY` | Currency for lead values (optional, default USD) |
 
-- Keep secrets in environment variables.
-- Never expose service-role keys in client-side code.
-- Use Supabase Row Level Security to protect user data.
-- Validate and authorize requests on the server.
+Redeploy after changing variables. Settings → Integrations shows what is configured. Without the AI or transcription variables, those features say so and everything else still works.
 
-## License
+### 3. Supabase auth settings
+Keep your site URL and redirect URLs as they are. Sessions renew from a refresh token; if you changed JWT expiry in Supabase, anything of 10 minutes or more works.
 
-Add your preferred license before distributing this project.
+### Notes
+- Audio limit is 4 MB per clip (Vercel request limit), about 20 minutes of recording. Audio is forwarded to your transcription provider and is not stored.
+- Contacts' emails and phone numbers are never sent to the AI. See the note under each assistant task for exactly what is sent.
+- AI and transcription calls are limited per user (30 AI / 15 transcriptions per 10 minutes). Old `ai_usage` rows can be cleaned with the optional pg_cron line in the schema file.
+- Deleting a contact deletes their activities and calls; their leads and tasks are kept and unlinked.
+- Not included: team/shared workspaces, email sending, deleting your account (needs a service-role admin call), live call transcription.
+
+### Testing checklist
+See `docs/TESTING.md`.
