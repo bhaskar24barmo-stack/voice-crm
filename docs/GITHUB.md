@@ -27,7 +27,7 @@ npm install
 npm run typecheck && npm run lint && npm run build
 git status          # make sure no .env files are listed
 git add -A
-git commit -m "Voice CRM v2.0: CRM workspace, Jelly AI helper, voice workflows"
+git commit -m "Voice CRM v2.2: new animated logo and phone install"
 git push -u origin v2-crm
 ```
 

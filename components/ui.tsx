@@ -1,9 +1,9 @@
-import { AudioLines } from "lucide-react";
 import type { ReactNode } from "react";
+import LogoMark from "./LogoMark";
 
 export const Logo = () => (
-  <a href="/" className="flex items-center gap-2 font-serif text-xl font-semibold">
-    <span className="grid h-8 w-8 place-items-center rounded-lg bg-ink text-paper"><AudioLines size={18} aria-hidden /></span>
+  <a href="/" className="flex items-center gap-2.5 font-serif text-xl font-semibold">
+    <LogoMark size={36} />
     Voice CRM
   </a>
 );

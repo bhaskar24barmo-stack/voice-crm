@@ -19,10 +19,11 @@ Run first: `npm install && npm run typecheck && npm run lint && npm run build`
 - Wrong key → "provider rejected the API key". Wrong model id → "model isn't available". Run >30 times in 10 minutes → rate-limit message.
 - Each task returns text; "Extract action items" returns a summary plus items.
 
-## Voice
-- No `STT_*` set: notice shows; manual notes + AI summary + save still work.
-- With STT set: consent box must be ticked before recording or upload; record 20 seconds, transcribe, summarize, untick one task, save; check Calls and Tasks.
-- Deny microphone permission → friendly message. Upload a file over 4 MB → rejected.
+## Voice (Home screen)
+- No `STT_*` set: tapping the orb explains it; typing a note in the box below still saves it.
+- With STT and OpenRouter set: tap the orb, say "aaj Rahul se call hui, kal ka petrol kharcha 800 tha, kal client aayega", tap again. You should get a note, an expense note and a task due tomorrow. Check Tasks and Recent activity.
+- Tap Undo: the new items disappear.
+- Deny microphone permission: friendly message appears.
 
 ## Responsive and accessibility
 - 375 px wide: sidebar becomes a drawer, tables become cards, pipeline scrolls sideways.

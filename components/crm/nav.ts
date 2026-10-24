@@ -1,13 +1,10 @@
-import { LayoutDashboard, Users, Kanban, CheckSquare, PhoneCall, Sparkles, AudioLines, Settings } from "lucide-react";
+import { LayoutDashboard, Users, Kanban, CheckSquare, Settings } from "lucide-react";
 
-// `ready: true` items are shown as unavailable until their stage ships, so no control is a dead link.
+// Five simple destinations. Activities, calls and the AI tools are reached from the home screen and from each contact.
 export const NAV = [
-  { href: "/account", label: "Dashboard", icon: LayoutDashboard, ready: true },
-  { href: "/account/contacts", label: "Contacts", icon: Users, ready: true },
-  { href: "/account/leads", label: "Leads & pipeline", icon: Kanban, ready: true },
-  { href: "/account/tasks", label: "Tasks", icon: CheckSquare, ready: true },
-  { href: "/account/activities", label: "Activities & calls", icon: PhoneCall, ready: true },
-  { href: "/account/assistant", label: "AI assistant", icon: Sparkles, ready: true },
-  { href: "/account/voice", label: "Voice", icon: AudioLines, ready: true },
-  { href: "/account/settings", label: "Settings", icon: Settings, ready: true },
+  { href: "/account", label: "Home", icon: LayoutDashboard },
+  { href: "/account/contacts", label: "Contacts", icon: Users },
+  { href: "/account/leads", label: "Pipeline", icon: Kanban },
+  { href: "/account/tasks", label: "Tasks", icon: CheckSquare },
+  { href: "/account/settings", label: "Settings", icon: Settings },
 ] as const;

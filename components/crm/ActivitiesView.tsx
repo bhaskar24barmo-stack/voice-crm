@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { AudioLines, PhoneCall, Plus, StickyNote } from "lucide-react";
+import { PhoneCall, Plus, StickyNote } from "lucide-react";
 import { api, fmtDateTime } from "@/lib/client";
 import { useList } from "@/lib/hooks";
 import { ACTIVITY_TYPES, type Activity, type Call } from "@/lib/crm-types";
@@ -64,12 +64,11 @@ function Calls() {
   return (
     <>
       <div className="mb-4 flex flex-wrap justify-end gap-2">
-        <Link href="/account/voice" className={btnS}><AudioLines size={16} aria-hidden />Record or upload</Link>
         <button className={btnP} onClick={() => setForm("new")}><Plus size={16} aria-hidden />Log a call</button>
       </div>
       {list.error && <ErrorNote message={list.error} onRetry={list.reload} />}
       {list.loading && !list.items.length && <Spinner label="Loading calls" />}
-      {!list.loading && !list.error && !list.items.length && <Empty icon={<PhoneCall className="mx-auto text-ink/30" size={32} aria-hidden />} title="No calls saved yet" text="Log a call by hand, or record or upload one on the Voice page to get an AI summary." />}
+      {!list.loading && !list.error && !list.items.length && <Empty icon={<PhoneCall className="mx-auto text-ink/30" size={32} aria-hidden />} title="No calls saved yet" text="Log a call by hand, or just speak it on the Home screen and it is saved for you." />}
       {list.items.length > 0 && (
         <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white">
           {list.items.map((k) => (

@@ -48,7 +48,7 @@ Then run `supabase/rls-test.sql` (see the instructions at the top of that file) 
 |---|---|
 | `SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Login and all CRM data (already set if login works) |
 | `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` | AI assistant and call summaries |
-| `STT_API_URL`, `STT_API_KEY`, `STT_MODEL` | Transcribing recorded or uploaded audio (optional) |
+| `STT_API_URL`, `STT_API_KEY`, `STT_MODEL` | The voice button on Home (speech to text). Without them you can still type notes |
 | `NEXT_PUBLIC_CURRENCY` | Currency for lead values (optional, default USD) |
 
 Redeploy after changing variables. Settings → Integrations shows what is configured. Without the AI or transcription variables, those features say so and everything else still works.
@@ -65,3 +65,6 @@ Keep your site URL and redirect URLs as they are. Sessions renew from a refresh 
 
 ### Testing checklist
 See `docs/TESTING.md`.
+
+### Voice button (v2.1)
+Tap the orb on Home and speak. The audio is transcribed (`STT_*`), the text is sorted by the AI (`OPENROUTER_*`) into notes, tasks, meetings, expenses and contacts, and everything is saved at once. "Undo" removes what was just saved. If the AI is not configured, the text is saved as a single note. Expenses are stored as notes that start with "Expense". Names are matched to existing contacts only when exactly one matches.

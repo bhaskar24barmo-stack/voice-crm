@@ -9,5 +9,5 @@ const security = [
 export default {
   reactStrictMode: true,
   poweredByHeader: false,
-  async headers() { return [{ source: "/(.*)", headers: security }]; },
+  async headers() { return [{ source: "/(.*)", headers: security }, { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache, no-store, must-revalidate" }] }]; },
 };

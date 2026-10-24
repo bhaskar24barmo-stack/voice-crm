@@ -1,19 +1,17 @@
 import type { ReactNode } from "react";
+import { CountUp, Spot } from "./fx";
 
-export const Card = ({ title, action, children, className = "" }: { title?: string; action?: ReactNode; children: ReactNode; className?: string }) => (
-  <section className={`rounded-2xl border border-line bg-white p-5 ${className}`}>
+export const Card = ({ title, action, children, className = "", delay = 0 }: { title?: string; action?: ReactNode; children: ReactNode; className?: string; delay?: number }) => (
+  <Spot className={`glass rise rounded-3xl p-5 ${className}`} style={{ animationDelay: `${delay}ms` }}>
     {title && <div className="mb-4 flex items-center justify-between gap-3"><h2 className="font-serif text-xl font-semibold">{title}</h2>{action}</div>}
     {children}
-  </section>
+  </Spot>
 );
-export const Stat = ({ label, value, hint }: { label: string; value: number; hint?: string }) => (
-  <div className="rounded-2xl border border-line bg-white p-5">
-    <p className="text-sm text-ink/65">{label}</p>
-    <p className="mt-2 font-serif text-4xl font-semibold tabular-nums">{value}</p>
-    {hint && <p className="mt-1 text-xs text-ink/55">{hint}</p>}
-  </div>
+export const Stat = ({ label, value, hint, icon, delay = 0 }: { label: string; value: number; hint?: string; icon?: ReactNode; delay?: number }) => (
+  <Spot className="glass rise rounded-3xl p-5" style={{ animationDelay: `${delay}ms` }}>
+    <div className="flex items-start justify-between gap-2"><p className="text-sm text-ink/65">{label}</p>{icon && <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent/10 text-accent">{icon}</span>}</div>
+    <p className="mt-3 font-serif text-5xl font-semibold leading-none"><CountUp value={value} /></p>
+    {hint && <p className="mt-2 text-xs text-ink/55">{hint}</p>}
+  </Spot>
 );
-export const Empty = ({ children }: { children: ReactNode }) => <p className="rounded-xl bg-paper px-4 py-5 text-sm text-ink/65">{children}</p>;
-export const Unavailable = ({ label, icon }: { label: string; icon: ReactNode }) => (
-  <span aria-disabled="true" title="Not available yet" className="inline-flex cursor-not-allowed items-center gap-2 rounded-lg border border-dashed border-ink/20 px-4 py-2.5 text-sm text-ink/45">{icon}{label}<span className="rounded-full bg-ink/5 px-2 py-0.5 text-[11px]">Soon</span></span>
-);
+export const Empty = ({ children }: { children: ReactNode }) => <p className="rounded-2xl bg-ink/[.04] px-4 py-5 text-sm text-ink/65">{children}</p>;
