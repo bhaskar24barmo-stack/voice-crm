@@ -25,6 +25,14 @@ Run first: `npm install && npm run typecheck && npm run lint && npm run build`
 - Tap Undo: the new items disappear.
 - Deny microphone permission: friendly message appears.
 
+## Phone feel (test on a real phone)
+- Dock: tap the raised mic from any page; you land on Home and recording starts (first time asks permission).
+- Tasks: swipe a task right to complete it (green check, buzz, confetti). The checkbox also works.
+- Forms open as bottom sheets; drag the grey handle down to close.
+- Pull down at the top of a page: the logo appears and the data refreshes.
+- Scroll down: the top bar hides; scroll up: it returns.
+- "Add to home screen" card appears on Home (Android: Install button; iPhone: Share, then Add to Home Screen).
+
 ## Responsive and accessibility
 - 375 px wide: sidebar becomes a drawer, tables become cards, pipeline scrolls sideways.
 - Keyboard only: tab through nav, open a dialog (focus stays inside), Escape closes it, focus returns to the button.

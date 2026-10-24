@@ -65,8 +65,8 @@ export default function ContactsView({ openNew }: { openNew: boolean }) {
             </table>
           </div>
           <ul className="space-y-3 md:hidden">
-            {list.items.map((c) => (
-              <li key={c.id} className="rounded-2xl border border-line bg-white p-4">
+            {list.items.map((c, i) => (
+              <li key={c.id} className="rise rounded-2xl border border-line bg-white p-4" style={{ animationDelay: `${Math.min(i, 10) * 45}ms` }}>
                 <div className="flex items-start justify-between gap-3"><Link href={`/account/contacts/${c.id}`} className="font-medium hover:text-accent">{c.name}</Link><Badge tone={statusTone(c.status)}>{c.status}</Badge></div>
                 <p className="mt-1 text-sm text-ink/65">{[c.company, c.email, c.phone].filter(Boolean).join(" · ")}</p>
                 <div className="mt-3 flex gap-4 text-sm"><button className="text-accent" onClick={() => setForm(c)}>Edit</button><button className="text-red-700" onClick={() => setDel(c)}>Delete</button></div>

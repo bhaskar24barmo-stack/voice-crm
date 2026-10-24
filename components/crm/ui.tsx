@@ -48,9 +48,19 @@ export function Modal({ title, onClose, children, wide }: { title: string; onClo
     document.body.style.overflow = "hidden";
     return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; prev?.focus?.(); };
   }, []);
+  const drag = useRef<number | null>(null);
+  const down = (e: any) => { drag.current = e.clientY; e.currentTarget.setPointerCapture?.(e.pointerId); if (ref.current) ref.current.style.transition = "none"; };
+  const move = (e: any) => { if (drag.current == null || !ref.current) return; ref.current.style.transform = `translateY(${Math.max(0, e.clientY - drag.current)}px)`; };
+  const up = (e: any) => {
+    if (drag.current == null || !ref.current) return;
+    const dy = e.clientY - drag.current; drag.current = null;
+    ref.current.style.transition = "transform .25s cubic-bezier(.2,.8,.2,1)";
+    if (dy > 110) { ref.current.style.transform = "translateY(100%)"; setTimeout(() => close.current(), 200); } else ref.current.style.transform = "";
+  };
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-ink/40 p-4" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div ref={ref} role="dialog" aria-modal="true" aria-labelledby={id} tabIndex={-1} className={`max-h-[92vh] w-full overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl outline-none sm:p-6 ${wide ? "max-w-2xl" : "max-w-lg"}`}>
+    <div className="fade-in fixed inset-0 z-50 flex items-end justify-center bg-ink/40 sm:items-center sm:p-4" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div ref={ref} role="dialog" aria-modal="true" aria-labelledby={id} tabIndex={-1} className={`sheet max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl outline-none sm:rounded-2xl sm:p-6 ${wide ? "sm:max-w-2xl" : "sm:max-w-lg"}`}>
+        <div className="-mx-5 -mt-5 mb-1 flex h-9 touch-none items-center justify-center sm:hidden" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} aria-hidden><span className="h-1.5 w-11 rounded-full bg-ink/15" /></div>
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 id={id} className="font-serif text-2xl font-semibold">{title}</h2>
           <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1.5 text-ink/60 hover:bg-ink/5"><X size={18} /></button>
@@ -76,7 +86,11 @@ export function Confirm({ title, message, confirmLabel = "Delete", onConfirm, on
   );
 }
 
-export const Spinner = ({ label = "Loading" }: { label?: string }) => <p role="status" className="flex items-center gap-2 py-6 text-sm text-ink/60"><Loader2 size={16} className="animate-spin" aria-hidden />{label}…</p>;
+export const Spinner = ({ label = "Loading" }: { label?: string }) => (
+  <div role="status" className="space-y-3 py-2"><span className="sr-only">{label}…</span>
+    {[0, 1, 2, 3].map((i) => <div key={i} aria-hidden className="skeleton h-16 rounded-2xl" style={{ animationDelay: `${i * 120}ms` }} />)}
+  </div>
+);
 export const ErrorNote = ({ message, onRetry }: { message: string; onRetry?: () => void }) => (
   <div role="alert" className="flex flex-wrap items-center gap-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"><AlertCircle size={16} aria-hidden />{message}{onRetry && <button onClick={onRetry} className="font-medium underline">Try again</button>}</div>
 );

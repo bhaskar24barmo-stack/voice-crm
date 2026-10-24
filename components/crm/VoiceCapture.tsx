@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Check, ListTodo, Loader2, Mic, Receipt, Send, Square, StickyNote, Undo2, UserPlus } from "lucide-react";
 import { api, fmtDate, today } from "@/lib/client";
+import { haptic } from "@/lib/haptic";
+import { burst } from "./fx";
 
 type Created = { kind: string; resource: "activities" | "tasks" | "contacts"; id: string; title: string; due_date: string | null; contact: string | null };
 type Phase = "idle" | "listening" | "transcribing" | "understanding" | "done" | "error";
@@ -62,11 +64,11 @@ export default function VoiceCapture({ sttReady, aiReady }: { sttReady: boolean;
       chunks.current = []; bytes.current = 0;
       r.ondataavailable = (e) => { if (e.data.size) { chunks.current.push(e.data); bytes.current += e.data.size; if (bytes.current > 3.8 * 1024 * 1024 && r.state === "recording") r.stop(); } };
       r.onstop = () => { cleanup(); process(new Blob(chunks.current, { type: r.mimeType || "audio/webm" })); };
-      r.start(1000); mr.current = r; setSecs(0); setPhase("listening");
+      r.start(1000); mr.current = r; setSecs(0); setPhase("listening"); haptic(20);
       timer.current = window.setInterval(() => setSecs((x) => { if (x + 1 >= MAX_SECS && r.state === "recording") r.stop(); return x + 1; }), 1000);
     } catch { cleanup(); setErr("Microphone access was blocked. Allow it in your browser’s address bar, or type your note below."); setPhase("error"); }
   }
-  const stop = () => { if (mr.current?.state === "recording") mr.current.stop(); };
+  const stop = () => { if (mr.current?.state === "recording") { haptic(12); mr.current.stop(); } };
 
   async function process(blob: Blob) {
     if (blob.size < 1500) { setErr("I didn’t catch anything. Tap the orb and try again."); setPhase("error"); return; }
@@ -85,6 +87,7 @@ export default function VoiceCapture({ sttReady, aiReady }: { sttReady: boolean;
     try {
       const j = await api<{ created: Created[]; skipped: number }>("/api/capture", { body: { text, today: today(), mode } });
       setCreated(j.created); setSkipped(j.skipped); setUndone(false); setPhase("done"); setTyped("");
+      if (j.created.length) { haptic([15, 50, 15]); const r = orb.current?.getBoundingClientRect(); if (r) burst(r.left + r.width / 2, r.top + r.height / 2); }
       router.refresh();
     } catch (e) { setErr(e instanceof Error ? e.message : "Couldn’t save that."); setPhase("error"); }
   }
@@ -101,6 +104,15 @@ export default function VoiceCapture({ sttReady, aiReady }: { sttReady: boolean;
     if (!consent) { setAskConsent(true); return; }
     start();
   };
+  const onOrbRef = useRef<() => void>(() => {});
+  onOrbRef.current = onOrb;
+  useEffect(() => {
+    const h = () => onOrbRef.current();
+    window.addEventListener("vc:voice", h);
+    let t: number | undefined;
+    try { if (sessionStorage.getItem("vc-autostart") === "1") { sessionStorage.removeItem("vc-autostart"); t = window.setTimeout(h, 500); } } catch { /* storage unavailable */ }
+    return () => { window.removeEventListener("vc:voice", h); window.clearTimeout(t); };
+  }, []);
   const busy = phase === "transcribing" || phase === "understanding";
   const mmss = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
   const status = phase === "listening" ? `Listening… ${mmss}` : phase === "transcribing" ? "Transcribing…" : phase === "understanding" ? "Understanding and saving…" : phase === "done" ? "Saved" : "Tap and speak";

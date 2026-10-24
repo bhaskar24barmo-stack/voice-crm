@@ -1,25 +1,17 @@
 # Changelog
 
-## v2.2.0 — New logo, phone install
-- New animated logo (orange C around a sound wave): draws itself in, bars dance on hover/tap and on loading screens
-- Installable on phones (home-screen icon, full-screen app, share-preview image for WhatsApp)
-- Phone speed-ups: lighter effects on small screens, no zoom when tapping form fields
-- `scripts/make-icons.cjs` regenerates the icons
+## v2.0.0 — Voice CRM workspace (built on V1, no V2 template code)
+**Workspace**
+- `/account` is a full CRM: Home, Contacts, Pipeline, Tasks, Settings (activities, calls and AI tools are reached from Home and from each contact)
+- One-button voice: tap the orb or the mic in the phone dock and speak in English, Hindi or Hinglish. Notes, tasks, meetings, expenses and new contacts are saved straight to the CRM, with Undo
+- Optional AI assistant on OpenRouter, rate limited, sends the minimum data (never email or phone)
+- Supabase tables with Row Level Security on every table; isolation test included
+- Sessions renew automatically; security headers, same-origin checks, request limits, data export
 
-## v2.1.0 — One-button voice, new look
-- Home screen has one big voice orb: say it in English, Hindi or Hinglish and notes, tasks, meetings, expenses and new contacts are saved straight to the CRM, with Undo
-- Removed the Jelly chat helper, the Voice tab and the Activities & calls tab. Navigation is now Home, Contacts, Pipeline, Tasks, Settings
-- New design: animated aurora background, glass cards with spotlight hover, glowing hero, counting numbers, floating mobile dock
-- New `/api/capture` route; removed `/api/voice/save`
-
-## v2.0.0 — CRM workspace (built on V1, no V2 code)
-- `/account` is now a CRM dashboard with sidebar navigation (mobile drawer), real stats, pipeline overview, follow-ups, recent activity and call summaries
-- Contacts (search, filters, detail page with interaction history), leads with a six-stage pipeline, tasks with overdue/upcoming views, activities and calls
-- AI assistant on OpenRouter: summaries, action items, follow-up emails, next steps, workflow help. Server-side only, rate limited, minimal data sent
-- Voice page: record or upload audio with explicit consent, transcription through any OpenAI-compatible provider, AI summary, reviewed follow-up tasks, save to a contact
-- Supabase schema with Row Level Security on every table (`supabase/crm-schema.sql`), isolation test (`supabase/rls-test.sql`)
-- Sessions now renew automatically (refresh token + `middleware.ts`) instead of ending after about an hour
-- Security headers, same-origin checks on writes, request size limits, data export
+**Design**
+- New animated logo (orange C around a sound wave) and installable phone app with icons and a share preview
+- Animated aurora background, glass cards with spotlight hover, glowing hero, counting numbers, skeleton loaders
+- Phone-first: floating dock with raised mic button, bottom sheets you can swipe down, swipe a task right to complete it, pull down to refresh, haptic buzzes, confetti on success, header that hides while scrolling
 - Landing page, login, signup and waitlist unchanged
 
 ## v1.0.0

@@ -44,8 +44,8 @@ export default function LeadsView() {
                   <h2 className="mb-3 flex items-center justify-between text-sm font-medium"><span>{STAGE_LABEL[s]}</span><span className="rounded-full bg-white px-2 py-0.5 text-xs text-ink/60">{col.length}</span></h2>
                   {sum > 0 && <p className="-mt-1 mb-3 text-xs text-ink/55">{money(sum)}</p>}
                   <ul className="space-y-2.5">
-                    {col.map((l) => (
-                      <li key={l.id} className="rounded-xl border border-line bg-white p-3 shadow-sm">
+                    {col.map((l, i) => (
+                      <li key={l.id} className="rise rounded-xl border border-line bg-white p-3 shadow-sm" style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}>
                         <button className="text-left text-sm font-semibold hover:text-accent" onClick={() => setForm(l)}>{l.title}</button>
                         {l.contact && <p className="mt-0.5 text-xs text-ink/60"><Link href={`/account/contacts/${l.contact.id}`} className="hover:text-accent">{l.contact.name}</Link>{l.contact.company ? ` · ${l.contact.company}` : ""}</p>}
                         <p className="mt-2 flex items-center justify-between text-xs text-ink/60"><span className="font-medium text-accent">{money(l.value)}</span>{l.expected_close && <span>Close {fmtDate(l.expected_close)}</span>}</p>

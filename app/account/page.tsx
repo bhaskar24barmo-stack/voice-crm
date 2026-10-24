@@ -28,7 +28,7 @@ export default async function Dashboard() {
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       {/* Hero: the whole job is one button */}
-      <div className="glow-border rise rounded-[2rem] p-[1.5px]">
+      <div className="crm-glow rise rounded-[2rem] p-[1.5px]">
         <section className="relative overflow-hidden rounded-[calc(2rem-1.5px)] bg-ink p-6 text-paper sm:p-10">
           <div aria-hidden className="pointer-events-none absolute inset-0">
             <span className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent/50 blur-3xl" style={{ animation: "drift-a 18s ease-in-out infinite" }} />

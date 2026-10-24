@@ -35,7 +35,7 @@ No Supabase? Set `WAITLIST_WEBHOOK_URL` (e.g. a Google Apps Script that appends 
 - `content/TOPICS.md` is a backlog of post ideas.
 
 
-## CRM workspace (v2.0)
+## CRM workspace (V2)
 
 After login, `/account` is the CRM. Landing page, login and signup are unchanged.
 
