@@ -24,4 +24,4 @@ A note without a follow-up date is just a memory. Add the task at the same momen
 ## 5. Review once a day
 Spend five minutes scanning today’s notes and tomorrow’s tasks. Small, regular cleanups beat a painful monthly catch-up.
 
-Voice CRM is being built around this idea: say what happened, review the proposed updates, and confirm. [Join the waitlist](/#waitlist) to hear when early access opens.
+Voice CRM is built around this idea: say what happened and it files it, with one-tap undo. [Create an account](/signup) to try it.

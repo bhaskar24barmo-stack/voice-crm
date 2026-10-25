@@ -11,19 +11,17 @@ Live: Vercel -> your project -> Settings -> Environment Variables -> add each fo
 | Name | Needed for | Where to get it |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | sitemap, canonical links, and the sign-in link emails (required for them) | your live URL, e.g. `https://voice-crm-landing.vercel.app` |
-| `SUPABASE_URL` | waitlist, login | Supabase -> Project Settings -> API -> Project URL |
+| `SUPABASE_URL` | login and the CRM | Supabase -> Project Settings -> API -> Project URL |
 | `NEXT_PUBLIC_SUPABASE_URL` | login | same Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | login / signup | same page -> `anon` `public` key |
-| `SUPABASE_SERVICE_ROLE_KEY` | waitlist saving | same page -> `service_role` key. **Secret. Never commit it, never add `NEXT_PUBLIC_` to it.** |
 | `NEXT_PUBLIC_GSC_VERIFICATION` | Google Search Console | the `content="..."` value of the HTML tag Google gives you |
-| `WAITLIST_WEBHOOK_URL` | optional | only if you use a Google Sheet/webhook instead of Supabase |
 
 The site also accepts the names Vercel's Supabase integration creates: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (instead of the anon key) and `SUPABASE_SECRET_KEY` (instead of the service role key). You only need one name per row.
 
 Rules of thumb:
 - Variables starting with `NEXT_PUBLIC_` are visible to anyone in the browser. Only put public things there.
 - Changing a variable on Vercel does nothing until you redeploy.
-- Missing variables don't break the site. The waitlist and login just show a "not connected yet" message.
+- Missing variables don't break the site. Login just shows a "not connected yet" message.
 
 ---
 ## B) After this: do these in order
@@ -45,7 +43,7 @@ Create an empty repo, then run the commands in `README.md`. Add teammates under 
 **4. Add the variables on Vercel and redeploy (5 min)** (table above).
 
 **5. Test on the live site (10 min)**
-- Join the waitlist with a real email, then check Supabase -> Table Editor -> `waitlist`.
+- Create an account with a real email, then check Supabase -> Authentication -> Users.
 - Join with the same email again. It should still say success, with no duplicate row.
 - Click "Continue with Google" on /login, and also try "Email me a link". Both should land on /account.
 - Sign up with email + password, click the confirmation email, log in, log out.
@@ -60,7 +58,7 @@ Create an empty repo, then run the commands in `README.md`. Add teammates under 
 **7. Content plan (ongoing)**
 - 4 posts exist. Add 2-3 a week from `content/TOPICS.md`: copy a file in `content/blog/`, change the header and body, commit, and Vercel redeploys automatically.
 - Quality beats count: 20 genuinely useful posts beat 100 thin ones.
-- Every post should answer one real question and end with the waitlist link.
+- Every post should answer one real question and end with a link to create an account.
 
 **8. Before sharing widely**
 - Add a Privacy Policy page (you collect names and emails; have it reviewed for your region).
@@ -68,4 +66,4 @@ Create an empty repo, then run the commands in `README.md`. Add teammates under 
 - Optional: record a real product demo and use `<VideoDemo src="/demo.mp4" />` once the product exists. The current video is an animation and is labelled as one.
 
 **9. Ideas for v1.1**
-Email confirmation to waitlist joiners, a simple admin view of signups, an About page, OG share image, analytics (Plausible or Vercel Analytics).
+an About page, OG share image, analytics (Plausible or Vercel Analytics).

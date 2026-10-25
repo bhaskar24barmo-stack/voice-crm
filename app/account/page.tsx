@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { CalendarClock, CheckSquare, Database, ListPlus, Target, UserPlus, Users } from "lucide-react";
 import { getAuth } from "@/lib/supabase";
-import { getDashboard, STAGES, STAGE_LABEL } from "@/lib/crm-data";
+import { getDashboard, localToday, STAGES, STAGE_LABEL } from "@/lib/crm-data";
 import { aiConfigured, sttConfigured } from "@/lib/config";
 import { Card, Empty, Stat } from "@/components/crm/kit";
 import { Greeting } from "@/components/crm/fx";
@@ -18,10 +19,10 @@ const STAGE_COLOR: Record<string, string> = { new: "#F3C9A8", contacted: "#EDA46
 export default async function Dashboard() {
   const auth = await getAuth();
   if (!auth) redirect("/login");
-  const d = await getDashboard(auth.token);
+  const todayStr = localToday(headers().get("x-vercel-ip-timezone"));
+  const d = await getDashboard(auth.token, todayStr);
   const m = auth.user.user_metadata;
   const first = (m?.name || m?.full_name || "").split(" ")[0];
-  const todayStr = new Date().toISOString().slice(0, 10);
   const total = STAGES.reduce((a, s) => a + d.pipeline[s], 0);
   const summary = d.setupNeeded ? "" : d.overdue ? `${d.overdue} follow-up${d.overdue === 1 ? " is" : "s are"} overdue.` : d.openTasks ? `${d.openTasks} open task${d.openTasks === 1 ? "" : "s"}, nothing overdue.` : "You’re all caught up.";
 
@@ -31,8 +32,7 @@ export default async function Dashboard() {
       <div className="crm-glow rise rounded-[2rem] p-[1.5px]">
         <section className="relative overflow-hidden rounded-[calc(2rem-1.5px)] bg-ink p-6 text-paper sm:p-10">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <span className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent/50 blur-3xl" style={{ animation: "drift-a 18s ease-in-out infinite" }} />
-            <span className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-[#F6A56B]/25 blur-3xl" style={{ animation: "drift-b 24s ease-in-out infinite" }} />
+            <span className="hero-glow hero-glow-a" /><span className="hero-glow hero-glow-b" />
             <span className="absolute inset-0 opacity-60 [background-image:radial-gradient(rgba(255,255,255,.09)_1px,transparent_1px)] [background-size:22px_22px]" />
           </div>
           <div className="relative grid gap-10 lg:grid-cols-[1fr,1.05fr] lg:items-center">

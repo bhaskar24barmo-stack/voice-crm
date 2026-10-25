@@ -20,4 +20,4 @@ Do not just ask “any update?” Add something small: a relevant idea, a questi
 ## Do a weekly sweep
 Once a week, sort by last contact and message anyone you have not touched in the agreed gap.
 
-Tools that let you log a call by voice make step one much easier. [Join the Voice CRM waitlist](/#waitlist) if that sounds useful.
+Tools that let you log a call by voice make step one much easier. [Try Voice CRM](/signup) if that sounds useful.

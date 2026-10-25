@@ -24,7 +24,7 @@ export default function Nav() {
         </ul>
         <div className="hidden items-center gap-4 md:flex">
           <a href="/login" className="text-sm hover:text-accent">Log in</a>
-          <a href="/#waitlist" className={`${primary} !py-2 text-sm`}>Join Waitlist</a>
+          <a href="/signup" className={`${primary} !py-2 text-sm`}>Get started</a>
         </div>
         <button className="p-2 md:hidden" aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
@@ -36,7 +36,7 @@ export default function Nav() {
             {links.map(([l, h]) => <li key={h}><a href={h} onClick={() => setOpen(false)} className="block py-2.5 text-lg">{l}</a></li>)}
             <li><a href="/blog" onClick={() => setOpen(false)} className="block py-2.5 text-lg">Blog</a></li><li><a href="/login" onClick={() => setOpen(false)} className="block py-2.5 text-lg">Log in</a></li>
           </ul>
-          <a href="/#waitlist" onClick={() => setOpen(false)} className={`${primary} w-full`}>Join Waitlist</a>
+          <a href="/signup" onClick={() => setOpen(false)} className={`${primary} w-full`}>Get started</a>
         </div>
       )}
     </header>

@@ -13,25 +13,32 @@ export type Dashboard = {
   followUps: TaskRow[]; activities: ActivityRow[]; calls: CallRow[];
 };
 
-// Everything here comes from the signed-in user's own rows (RLS). Nothing is invented: a failed read shows "not set up", never zeros.
-export async function getDashboard(token: string): Promise<Dashboard> {
-  const today = new Date().toISOString().slice(0, 10);
-  const [contacts, active, open, overdue, upcoming, leads, followUps, activities, calls] = await Promise.all([
+// Today's date in the visitor's time zone (Vercel sends it in a header); falls back to UTC.
+export function localToday(tz?: string | null) {
+  try { if (tz) return new Date().toLocaleDateString("en-CA", { timeZone: tz }); } catch { /* unknown zone */ }
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Everything comes from the signed-in user's own rows (RLS). Five parallel reads; counts are worked out from the rows already fetched.
+export async function getDashboard(token: string, today: string): Promise<Dashboard> {
+  const [contacts, leads, tasks, activities, calls] = await Promise.all([
     sbQuery(token, "contacts?select=id&limit=1", { count: true }),
-    sbQuery(token, "leads?select=id&status=not.in.(won,lost)&limit=1", { count: true }),
-    sbQuery(token, "tasks?select=id&done=eq.false&limit=1", { count: true }),
-    sbQuery(token, `tasks?select=id&done=eq.false&due_date=lt.${today}&limit=1`, { count: true }),
-    sbQuery(token, `tasks?select=id&done=eq.false&due_date=gte.${today}&limit=1`, { count: true }),
     sbQuery<{ status: Stage }[]>(token, "leads?select=status&limit=1000"),
-    sbQuery<TaskRow[]>(token, `tasks?select=id,title,due_date,priority&done=eq.false&due_date=not.is.null&order=due_date.asc&limit=5`),
+    sbQuery<TaskRow[]>(token, "tasks?select=id,title,due_date,priority&done=eq.false&order=due_date.asc.nullslast&limit=500", { count: true }),
     sbQuery<ActivityRow[]>(token, "activities?select=id,type,summary,occurred_at&order=occurred_at.desc&limit=5"),
     sbQuery<CallRow[]>(token, "calls?select=id,summary,occurred_at&order=occurred_at.desc&limit=3"),
   ]);
   const pipeline = Object.fromEntries(STAGES.map((s) => [s, 0])) as Record<Stage, number>;
   for (const l of leads.data ?? []) if (l.status in pipeline) pipeline[l.status]++;
+  const open = tasks.data ?? [];
+  const dated = open.filter((t) => t.due_date);
   return {
-    setupNeeded: ![contacts, active, open, leads].every((r) => r.ok),
-    contacts: contacts.count ?? 0, activeLeads: active.count ?? 0, openTasks: open.count ?? 0, overdue: overdue.count ?? 0, upcoming: upcoming.count ?? 0,
-    pipeline, followUps: followUps.data ?? [], activities: activities.data ?? [], calls: calls.data ?? [],
+    setupNeeded: ![contacts, leads, tasks].every((r) => r.ok),
+    contacts: contacts.count ?? 0,
+    activeLeads: STAGES.filter((s) => s !== "won" && s !== "lost").reduce((a, s) => a + pipeline[s], 0),
+    openTasks: tasks.count ?? open.length,
+    overdue: dated.filter((t) => (t.due_date as string) < today).length,
+    upcoming: dated.filter((t) => (t.due_date as string) >= today).length,
+    pipeline, followUps: dated.slice(0, 5), activities: activities.data ?? [], calls: calls.data ?? [],
   };
 }

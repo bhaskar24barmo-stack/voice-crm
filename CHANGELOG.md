@@ -11,8 +11,10 @@
 **Design**
 - New animated logo (orange C around a sound wave) and installable phone app with icons and a share preview
 - Animated aurora background, glass cards with spotlight hover, glowing hero, counting numbers, skeleton loaders
-- Phone-first: floating dock with raised mic button, bottom sheets you can swipe down, swipe a task right to complete it, pull down to refresh, haptic buzzes, confetti on success, header that hides while scrolling
-- Landing page, login, signup and waitlist unchanged
+- Phone-first: floating dock, bottom sheets you can swipe down, swipe a task right to complete it, pull down to refresh, haptic buzzes, confetti on success, header that hides while scrolling
+- Waitlist removed: the landing page now sends visitors to create an account (your old waitlist table is left untouched)
+- Fast on phones: effects run on the graphics chip instead of repainting, fewer database calls on Home, lists open instantly when you go back, thin progress bar and skeleton screens while pages load
+- Landing design, login and signup unchanged
 
 ## v1.0.0
 - Landing page with 3D hero, animated pipeline board, voice-command marquee, pointer spotlight, aurora background

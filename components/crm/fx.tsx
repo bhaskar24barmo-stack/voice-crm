@@ -18,7 +18,7 @@ export function CountUp({ value, duration = 900 }: { value: number; duration?: n
 export function Spot({ children, className = "", style }: { children: ReactNode; className?: string; style?: CSSProperties }) {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div ref={ref} className={`crm-spot ${className}`} style={style} onPointerMove={(e) => { const r = ref.current!.getBoundingClientRect(); ref.current!.style.setProperty("--mx", `${e.clientX - r.left}px`); ref.current!.style.setProperty("--my", `${e.clientY - r.top}px`); }}>
+    <div ref={ref} className={`crm-spot ${className}`} style={style} onPointerMove={(e) => { if (e.pointerType !== "mouse") return; const r = ref.current!.getBoundingClientRect(); ref.current!.style.setProperty("--mx", `${e.clientX - r.left}px`); ref.current!.style.setProperty("--my", `${e.clientY - r.top}px`); }}>
       {children}
     </div>
   );

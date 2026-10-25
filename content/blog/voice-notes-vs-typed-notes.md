@@ -21,4 +21,4 @@ A recording alone is hard to search and easy to forget. The value comes from tur
 ## A good habit
 Speak a short summary right after each conversation, then review it before it is saved. A quick check catches mishearings and keeps your data trustworthy.
 
-That review step is central to how we are designing Voice CRM. [Join the waitlist](/#waitlist) for early access updates.
+Voice CRM shows you exactly what it saved and lets you undo it in one tap. [Create an account](/signup) to try it.

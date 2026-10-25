@@ -1,6 +1,6 @@
 # Voice CRM landing
 
-Next.js 14 + Tailwind. Landing page, working waitlist, login/signup, and a blog.
+Next.js 14 + Tailwind. Landing page, login/signup, the Voice CRM workspace, and a blog.
 
 > Full launch steps and environment variables: see **LAUNCH-GUIDE.md**.
 
@@ -20,13 +20,12 @@ git branch -M main && git push -u origin main
 ```
 `.env*` files are git-ignored. Never commit keys.
 
-## Make waitlist + login/signup work (Supabase, free tier)
+## Make login/signup work (Supabase, free tier)
 1. Create a project at supabase.com. Run `supabase/schema.sql` in the SQL editor.
 2. Copy the values from Project Settings -> API into `.env.local` (and into Vercel -> Settings -> Environment Variables).
 3. Authentication -> Providers -> Email: keep "Confirm email" on, and set the Site URL to your domain.
-4. Redeploy. Waitlist signups appear in the `waitlist` table; accounts appear under Authentication -> Users.
+4. Redeploy. Accounts appear under Authentication -> Users. (The old `waitlist` table is left untouched in case it holds sign-ups you want to keep.)
 
-No Supabase? Set `WAITLIST_WEBHOOK_URL` (e.g. a Google Apps Script that appends to a Sheet) for the waitlist only.
 
 ## Blog and SEO
 - Posts are Markdown files in `content/blog/` (copy an existing one; keep the `---` header).

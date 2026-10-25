@@ -1,6 +1,5 @@
 import { Check, X, Mic, FileText, CalendarClock, Users, History, ScrollText, ListChecks, SearchCheck } from "lucide-react";
 import Nav from "@/components/Nav";
-import Waitlist from "@/components/Waitlist";
 import HeroPreview from "@/components/HeroPreview";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import Spotlight from "@/components/Spotlight";
@@ -34,11 +33,11 @@ const who = [["Sales professionals", "Log calls between meetings without opening
 const tiers = [["Free", "A light way to try voice updates."], ["Starter", "For individuals getting organized."], ["Pro", "For professionals who live in their CRM."], ["Business", "For teams that need to work together."]];
 const faq = [
   ["What is Voice CRM?", "Voice CRM is a CRM you can talk to. You describe what happened, and AI turns it into structured contacts, notes, and follow-ups."],
-  ["How does voice input work?", "You speak, your speech is transcribed, and AI proposes CRM fields from it. The product is in development, and the previews on this page are illustrations."],
-  ["Can I edit AI-generated updates?", "Yes. Every proposed update is shown for review first, and you can change anything before you confirm."],
+  ["How does voice input work?", "You speak, your speech is transcribed, and AI proposes CRM fields from it. The previews on this page are illustrations with sample data."],
+  ["Can I edit AI-generated updates?", "Yes. After you speak, Voice CRM shows exactly what it saved. You can undo it with one tap, or edit any record afterwards."],
   ["Is my customer data secure?", "Security details will be published as the product is built. We don’t make security claims before they can be backed up."],
   ["Who is Voice CRM designed for?", "Salespeople, founders, small businesses, sales teams, freelancers, consultants, and other customer-facing teams."],
-  ["When will Voice CRM be available?", "There is no launch date yet. Join the waitlist for early access and updates."],
+  ["How do I get started?", "Create an account, log in, and tap the microphone on the home screen. You can also install Voice CRM on your phone from your browser."],
 ];
 
 export default function Home() {
@@ -54,7 +53,7 @@ export default function Home() {
             <h1 className="font-serif text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">Speak it. CRM gets it done.</h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink/75">Your voice is the fastest way to keep your CRM up to date. Capture leads, record conversations, and create follow-ups without the busywork.</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#waitlist" className={primary}>Join the Waitlist</a>
+              <a href="/signup" className={primary}>Get started</a>
               <a href="#how" className={secondary}>See How It Works</a>
             </div>
             <p className="mt-5 text-sm text-ink/60">Less admin. Better follow-through.</p>
@@ -152,7 +151,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <a href="#waitlist" className={`${primary} mt-8`}>Join the waitlist for early access and pricing updates</a>
+            <a href="/signup" className={`${primary} mt-8`}>Create your account</a>
           </div>
         </section>
 
@@ -168,22 +167,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section data-reveal id="waitlist" className="bg-ink py-20 text-paper">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 lg:grid-cols-2">
-            <div>
-              <h2 className="font-serif text-3xl font-semibold leading-tight sm:text-5xl">Be among the first to experience Voice CRM.</h2>
-              <p className="mt-5 max-w-md text-lg text-paper/75">Get early access and help shape a more natural way to manage customer relationships.</p>
-            </div>
-            <div className="text-ink"><Waitlist /></div>
+        <section data-reveal id="start" className="bg-ink py-20 text-paper">
+          <div className="mx-auto max-w-3xl px-5 text-center">
+            <h2 className="font-serif text-3xl font-semibold leading-tight sm:text-5xl">Stop typing. Start talking.</h2>
+            <p className="mx-auto mt-5 max-w-md text-lg text-paper/75">Create your account and tell Voice CRM about your day. It files the notes, follow-ups and expenses for you.</p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3"><a href="/signup" className={primary}>Create your account</a><a href="/login" className="rounded-xl border border-paper/30 px-5 py-3 font-medium text-paper transition hover:bg-white/10">Log in</a></div>
           </div>
         </section>
       </main>
 
       <footer className="border-t border-line">
         <div className={`${wrap} grid gap-10 py-12 md:grid-cols-3`}>
-          <div><Logo /><p className="mt-3 max-w-xs text-sm text-ink/70">A CRM you can simply talk to. Currently in early development.</p></div>
+          <div><Logo /><p className="mt-3 max-w-xs text-sm text-ink/70">A CRM you can simply talk to. Now in early access.</p></div>
           <div className="text-sm"><p className="mb-3 font-medium">Product</p>
-            <ul className="space-y-2 text-ink/70">{[["How it works", "#how"], ["Pricing", "#pricing"], ["FAQ", "#faq"], ["Waitlist", "#waitlist"]].map(([l, h]) => <li key={h}><a href={h} className="hover:text-accent">{l}</a></li>)}</ul></div>
+            <ul className="space-y-2 text-ink/70">{[["How it works", "#how"], ["Pricing", "#pricing"], ["FAQ", "#faq"]].map(([l, h]) => <li key={h}><a href={h} className="hover:text-accent">{l}</a></li>)}</ul></div>
           <div className="text-sm"><p className="mb-3 font-medium">Resources</p>
             <ul className="space-y-2 text-ink/60"><li><a href="/blog" className="hover:text-accent">Blog</a></li><li><a href="/signup" className="hover:text-accent">Create account</a></li><li>About (coming soon)</li><li>Privacy policy (coming soon)</li></ul></div>
         </div>

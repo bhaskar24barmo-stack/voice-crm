@@ -26,7 +26,7 @@ Run first: `npm install && npm run typecheck && npm run lint && npm run build`
 - Deny microphone permission: friendly message appears.
 
 ## Phone feel (test on a real phone)
-- Dock: tap the raised mic from any page; you land on Home and recording starts (first time asks permission).
+- Dock: four tabs (Home, Contacts, Pipeline, Tasks). The voice orb is on Home.
 - Tasks: swipe a task right to complete it (green check, buzz, confetti). The checkbox also works.
 - Forms open as bottom sheets; drag the grey handle down to close.
 - Pull down at the top of a page: the logo appears and the data refreshes.

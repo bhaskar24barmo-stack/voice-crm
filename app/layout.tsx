@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
   title: "Voice CRM — Speak it. CRM gets it done.",
-  description: "Update your CRM, capture leads, create follow-ups, and manage customer information using your voice. Join the waitlist.",
+  description: "Update your CRM, capture leads, create follow-ups, and manage customer information using your voice.",
   appleWebApp: { capable: true, title: "Voice CRM", statusBarStyle: "default" },
   formatDetection: { telephone: false },
-  openGraph: { title: "Voice CRM — Speak it. CRM gets it done.", description: "A CRM you can simply talk to. Join the waitlist.", type: "website" },
+  openGraph: { title: "Voice CRM — Speak it. CRM gets it done.", description: "A CRM you can simply talk to.", type: "website" },
 };
 
 export const viewport: Viewport = { themeColor: "#F7F5F0", width: "device-width", initialScale: 1, viewportFit: "cover" };

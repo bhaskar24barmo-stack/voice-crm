@@ -25,7 +25,7 @@ export default function Post({ params }: { params: { slug: string } }) {
         <h1 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">{p.title}</h1>
         <p className="mt-2 text-sm text-ink/50">{p.date}</p>
         <article className="prose-post mt-8" dangerouslySetInnerHTML={{ __html: renderMarkdown(p.body) }} />
-        <div className="mt-12 rounded-2xl bg-ink p-6 text-paper"><p className="font-serif text-xl">Speak it. CRM gets it done.</p><p className="mt-1 text-paper/70">Voice CRM is in development. Join the waitlist for early access.</p><a href="/#waitlist" className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 font-medium text-white">Join the Waitlist</a></div>
+        <div className="mt-12 rounded-2xl bg-ink p-6 text-paper"><p className="font-serif text-xl">Speak it. CRM gets it done.</p><p className="mt-1 text-paper/70">Create an account and tell Voice CRM about your day.</p><a href="/signup" className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 font-medium text-white">Create your account</a></div>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       </main>
     </>

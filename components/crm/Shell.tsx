@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Mic } from "lucide-react";
 import LogoutButton from "../LogoutButton";
 import LogoMark from "../LogoMark";
 import { haptic } from "@/lib/haptic";
@@ -11,6 +10,7 @@ import { ToastProvider } from "./ui";
 
 const isActive = (pathname: string, href: string) => (href === "/account" ? pathname === href : pathname === href || pathname.startsWith(href + "/"));
 const TABS = NAV.filter((n) => n.href !== "/account/settings"); // Settings lives behind the avatar on phones
+type Icon = (typeof NAV)[number]["icon"];
 
 function Brand() {
   return <Link href="/account" className="flex items-center gap-2.5 font-serif text-xl font-semibold"><LogoMark size={36} />Voice CRM</Link>;
@@ -24,6 +24,24 @@ export default function Shell({ name, email, children }: { name: string; email: 
   const [pull, setPull] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const busy = useRef(false);
+  const [bar, setBar] = useState<"idle" | "run" | "done">("idle");
+
+  // Thin progress line at the top while a page loads: starts on an in-app link tap, finishes when the route changes.
+  useEffect(() => {
+    const click = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest?.("a");
+      const href = a?.getAttribute("href") ?? "";
+      if (!a || !href.startsWith("/account") || a.target === "_blank" || e.metaKey || e.ctrlKey || href.split("?")[0] === window.location.pathname) return;
+      setBar("run");
+    };
+    document.addEventListener("click", click);
+    return () => document.removeEventListener("click", click);
+  }, []);
+  useEffect(() => {
+    setBar((b) => (b === "run" ? "done" : b));
+    const t = setTimeout(() => setBar((b) => (b === "done" ? "idle" : b)), 500);
+    return () => clearTimeout(t);
+  }, [pathname]);
 
   // Lets phones install the app to the home screen (the worker only passes requests through; nothing is cached).
   useEffect(() => { if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {}); }, []);
@@ -60,14 +78,7 @@ export default function Shell({ name, email, children }: { name: string; email: 
     return () => { window.removeEventListener("touchstart", ts); window.removeEventListener("touchmove", tm); window.removeEventListener("touchend", te); };
   }, [router]);
 
-  // The mic button in the dock: on Home it starts recording; elsewhere it jumps Home and starts there.
-  const speak = () => {
-    haptic(15);
-    if (pathname === "/account") { window.scrollTo({ top: 0, behavior: "smooth" }); window.dispatchEvent(new Event("vc:voice")); }
-    else { try { sessionStorage.setItem("vc-autostart", "1"); } catch { /* storage unavailable */ } router.push("/account"); }
-  };
-
-  const tab = (href: string, label: string, I: typeof Mic) => {
+  const tab = (href: string, label: string, I: Icon) => {
     const a = isActive(pathname, href);
     return (
       <li key={href}>
@@ -81,6 +92,7 @@ export default function Shell({ name, email, children }: { name: string; email: 
   return (
     <ToastProvider>
       <div className="crm-aurora" aria-hidden><span /><span /><span /></div>
+      <div aria-hidden className="route-bar pointer-events-none fixed left-0 top-0 z-[60] h-[3px] rounded-r-full bg-gradient-to-r from-accent to-[#F6A56B]" style={{ width: bar === "run" ? "85%" : bar === "done" ? "100%" : "0%", opacity: bar === "idle" ? 0 : 1, transition: bar === "run" ? "width 8s cubic-bezier(.1,.7,.2,1)" : bar === "done" ? "width .2s ease-out, opacity .3s .2s" : "none" }} />
       {(pull > 0 || refreshing) && (
         <div aria-hidden className="pointer-events-none fixed left-1/2 z-30 lg:hidden" style={{ top: "calc(3.5rem + env(safe-area-inset-top))", transform: `translate(-50%, ${pull - 44}px)`, opacity: Math.min(1, pull / 50), transition: pull === 0 || refreshing ? "all .3s" : "none" }}>
           <LogoMark size={40} mode={refreshing ? "live" : "static"} hover={false} />
@@ -106,7 +118,7 @@ export default function Shell({ name, email, children }: { name: string; email: 
           </div>
         </aside>
 
-        <header className={`sticky top-0 z-30 flex items-center justify-between bg-white/80 px-4 backdrop-blur-xl transition-transform duration-300 lg:hidden ${hideHeader ? "-translate-y-full" : ""}`} style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3.5rem + env(safe-area-inset-top))" }}>
+        <header className={`sticky top-0 z-30 flex items-center justify-between bg-white/95 px-4 transition-transform duration-300 lg:hidden ${hideHeader ? "-translate-y-full" : ""}`} style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3.5rem + env(safe-area-inset-top))" }}>
           <Brand />
           <Link href="/account/settings" aria-label="Settings and profile" className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-accent to-[#8F2F06] text-sm font-medium text-white transition active:scale-90">{initial}</Link>
         </header>
@@ -115,17 +127,10 @@ export default function Shell({ name, email, children }: { name: string; email: 
           <div key={pathname} className="page-in">{children}</div>
         </main>
 
-        {/* phone dock: four tabs and a raised mic button in the middle */}
+        {/* phone dock */}
         <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-40 lg:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
-          <ul className="mx-auto mb-3 grid w-[calc(100%-1.5rem)] max-w-md grid-cols-5 items-end rounded-[1.75rem] bg-ink/95 px-1.5 py-1 shadow-2xl shadow-ink/40 backdrop-blur-xl">
-            {tab(TABS[0].href, TABS[0].label, TABS[0].icon)}
-            {tab(TABS[1].href, TABS[1].label, TABS[1].icon)}
-            <li className="relative h-14">
-              <button onClick={speak} aria-label="Record a voice note" className="fab absolute -top-7 left-1/2 grid h-16 w-16 -translate-x-1/2 place-items-center rounded-full bg-gradient-to-br from-[#F59A5E] via-[#E0652A] to-[#B8440F] text-white outline-none ring-4 ring-[#141414] transition active:scale-90 focus-visible:ring-white/70"><Mic size={26} aria-hidden /></button>
-              <span aria-hidden className="absolute inset-x-0 bottom-0.5 text-center text-[10.5px] text-paper/70">Speak</span>
-            </li>
-            {tab(TABS[2].href, TABS[2].label, TABS[2].icon)}
-            {tab(TABS[3].href, TABS[3].label, TABS[3].icon)}
+          <ul className="mx-auto mb-3 grid w-[calc(100%-1.5rem)] max-w-sm grid-cols-4 rounded-[1.75rem] bg-ink px-1.5 py-1 shadow-2xl shadow-ink/40">
+            {TABS.map((t) => tab(t.href, t.label, t.icon))}
           </ul>
         </nav>
       </div>

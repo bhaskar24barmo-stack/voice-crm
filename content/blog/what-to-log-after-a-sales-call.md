@@ -22,4 +22,4 @@ A repeatable template makes notes searchable and comparable. Over time it also s
 ## Log it quickly
 The longer you wait, the less you remember. Capture the main points straight after the call, even if it is a rough summary.
 
-[Join the waitlist](/#waitlist) to follow Voice CRM, a CRM you can simply talk to.
+[Create an account](/signup) to try Voice CRM, a CRM you can simply talk to.

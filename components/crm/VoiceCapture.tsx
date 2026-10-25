@@ -39,7 +39,7 @@ export default function VoiceCapture({ sttReady, aiReady }: { sttReady: boolean;
 
   useEffect(() => { try { setConsent(localStorage.getItem("vc-voice-ok") === "1"); } catch { /* storage unavailable */ } }, []);
   useEffect(() => { const t = window.setInterval(() => setEx((x) => (x + 1) % EXAMPLES.length), 3800); return () => window.clearInterval(t); }, []);
-  const cleanup = () => { stream.current?.getTracks().forEach((t) => t.stop()); window.clearInterval(timer.current); cancelAnimationFrame(raf.current); audioCtx.current?.close().catch(() => {}); audioCtx.current = null; orb.current?.style.setProperty("--lvl", "0"); };
+  const cleanup = () => { stream.current?.getTracks().forEach((t) => t.stop()); window.clearInterval(timer.current); cancelAnimationFrame(raf.current); audioCtx.current?.close().catch(() => {}); audioCtx.current = null; if (orb.current) orb.current.style.transform = ""; };
   useEffect(() => cleanup, []);
 
   function meter(s: MediaStream) {
@@ -48,7 +48,7 @@ export default function VoiceCapture({ sttReady, aiReady }: { sttReady: boolean;
       const ac = new AC(); audioCtx.current = ac;
       const an = ac.createAnalyser(); an.fftSize = 256; ac.createMediaStreamSource(s).connect(an);
       const buf = new Uint8Array(an.fftSize);
-      const loop = () => { an.getByteTimeDomainData(buf); let sum = 0; for (let i = 0; i < buf.length; i++) { const d = (buf[i] - 128) / 128; sum += d * d; } orb.current?.style.setProperty("--lvl", String(Math.min(1, Math.sqrt(sum / buf.length) * 4))); raf.current = requestAnimationFrame(loop); };
+      const loop = () => { an.getByteTimeDomainData(buf); let sum = 0; for (let i = 0; i < buf.length; i++) { const d = (buf[i] - 128) / 128; sum += d * d; } if (orb.current) orb.current.style.transform = `scale(${1 + Math.min(1, Math.sqrt(sum / buf.length) * 4) * 0.2})`; raf.current = requestAnimationFrame(loop); };
       loop();
     } catch { /* the orb still animates without live levels */ }
   }
@@ -104,15 +104,6 @@ export default function VoiceCapture({ sttReady, aiReady }: { sttReady: boolean;
     if (!consent) { setAskConsent(true); return; }
     start();
   };
-  const onOrbRef = useRef<() => void>(() => {});
-  onOrbRef.current = onOrb;
-  useEffect(() => {
-    const h = () => onOrbRef.current();
-    window.addEventListener("vc:voice", h);
-    let t: number | undefined;
-    try { if (sessionStorage.getItem("vc-autostart") === "1") { sessionStorage.removeItem("vc-autostart"); t = window.setTimeout(h, 500); } } catch { /* storage unavailable */ }
-    return () => { window.removeEventListener("vc:voice", h); window.clearTimeout(t); };
-  }, []);
   const busy = phase === "transcribing" || phase === "understanding";
   const mmss = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
   const status = phase === "listening" ? `Listening… ${mmss}` : phase === "transcribing" ? "Transcribing…" : phase === "understanding" ? "Understanding and saving…" : phase === "done" ? "Saved" : "Tap and speak";
